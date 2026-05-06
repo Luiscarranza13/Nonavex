@@ -1,0 +1,22 @@
+<svg width="620" height="720" viewBox="0 0 620 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="620" height="720" rx="52" fill="#EAF7FF"/>
+  <path d="M135 95H485L535 650H85L135 95Z" fill="#0B63CE"/>
+  <path d="M158 125H462L503 620H117L158 125Z" fill="url(#g)"/>
+  <path d="M118 445C200 390 296 445 390 407C456 381 484 334 505 303L531 650H85L118 445Z" fill="#F7FBFF"/>
+  <path d="M131 520C211 473 287 533 377 498C438 474 476 430 518 395L535 650H85L131 520Z" fill="#E3342F"/>
+  <text x="310" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="82" fill="white">PARUSIA</text>
+  <text x="310" y="332" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="28" fill="#DDF7FF">DETERGENTE EN POLVO</text>
+  <circle cx="407" cy="180" r="45" fill="#E3342F"/>
+  <text x="407" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="white">850g</text>
+  <circle cx="213" cy="412" r="62" fill="#8CE7FF" opacity=".9"/>
+  <circle cx="263" cy="391" r="34" fill="white" opacity=".85"/>
+  <circle cx="360" cy="443" r="48" fill="#BFF4FF" opacity=".85"/>
+  <text x="310" y="588" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="white">NOVANEX</text>
+  <defs>
+    <linearGradient id="g" x1="154" y1="125" x2="487" y2="618" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1398FF"/>
+      <stop offset=".5" stop-color="#0B63CE"/>
+      <stop offset="1" stop-color="#083E83"/>
+    </linearGradient>
+  </defs>
+</svg>

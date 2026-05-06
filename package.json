@@ -1,0 +1,10 @@
+{
+  "name": "nonavex-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix parusia run dev",
+    "build": "npm --prefix parusia run build",
+    "start": "npm --prefix parusia run start",
+    "lint": "npm --prefix parusia run lint"
+  }
+}
