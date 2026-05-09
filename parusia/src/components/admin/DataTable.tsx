@@ -12,7 +12,15 @@ export type SimpleColumn = {
   cell?: (value: unknown, row: RowData) => ReactNode;
 };
 
-export function DataTable({ data, columns }: { data: RowData[]; columns: SimpleColumn[] }) {
+export function DataTable({
+  data,
+  columns,
+  searchPlaceholder = "Buscar...",
+}: {
+  data: RowData[];
+  columns: SimpleColumn[];
+  searchPlaceholder?: string;
+}) {
   const [filter, setFilter] = useState("");
   const rows = useMemo(() => {
     const normalized = filter.trim().toLowerCase();
@@ -24,9 +32,19 @@ export function DataTable({ data, columns }: { data: RowData[]; columns: SimpleC
 
   return (
     <div className="space-y-3">
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input value={filter} onChange={(event) => setFilter(event.target.value)} placeholder="Buscar..." className="pl-9" />
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full max-w-sm">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="pl-9"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {rows.length} de {data.length} registros
+        </p>
       </div>
       <div className="overflow-x-auto rounded-lg border">
         <Table className="min-w-[760px]">
@@ -48,7 +66,9 @@ export function DataTable({ data, columns }: { data: RowData[]; columns: SimpleC
               </TableRow>
             )) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">Sin registros.</TableCell>
+                <TableCell colSpan={Math.max(columns.length, 1)} className="h-24 text-center text-muted-foreground">
+                  {filter ? "No hay resultados para la busqueda." : "Sin registros."}
+                </TableCell>
               </TableRow>
             )}
           </TableBody>

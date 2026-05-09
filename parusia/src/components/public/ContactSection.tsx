@@ -27,14 +27,14 @@ export function ContactSection() {
         <div>
           <p className="font-semibold text-cyan-200">Contacto</p>
           <h2 className="mt-2 text-3xl font-bold tracking-normal">Habla con Novanex.</h2>
-          <p className="mt-4 text-white/70">Escríbenos para consultas comerciales o compra directamente por WhatsApp.</p>
+          <p className="mt-4 text-slate-200">Escribenos para consultas comerciales o compra directamente por WhatsApp.</p>
           <Button asChild className="mt-6 bg-red-600 text-white hover:bg-red-700">
             <a href={whatsappUrl()} target="_blank" rel="noreferrer">
               <MessageCircle /> Ir a WhatsApp
             </a>
           </Button>
         </div>
-        <form onSubmit={submit} className="grid gap-4 rounded-lg border border-white/10 bg-white/8 p-6">
+        <form onSubmit={submit} className="grid gap-4 rounded-lg border-2 border-cyan-300 bg-white p-6 shadow-xl">
           <Input name="nombre" placeholder="Nombre" required className="bg-white text-slate-950" />
           <Input name="correo" type="email" placeholder="Correo" className="bg-white text-slate-950" />
           <Textarea name="mensaje" placeholder="Mensaje" required className="min-h-32 bg-white text-slate-950" />

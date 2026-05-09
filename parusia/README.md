@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Parusia
 
-## Getting Started
+Aplicacion Next.js para la landing publica de Parusia y un panel administrativo conectado a Supabase.
 
-First, run the development server:
+## Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev        # desarrollo con webpack
+npm run dev:turbo  # desarrollo con Turbopack
+npm run build      # build de produccion
+npm run lint       # ESLint
+npm run test:admin # prueba modular del panel admin
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Configuracion
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Copia `.env.example` a `.env`.
+2. Completa:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `NEXT_PUBLIC_SITE_URL`
+3. Aplica `supabase/schema.sql` en tu proyecto Supabase.
+4. Crea un usuario con perfil `admin` activo para entrar al panel.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rutas principales
 
-## Learn More
+- `/`: landing publica con producto destacado, beneficios, galeria, FAQ y contacto.
+- `/login`: acceso al panel administrativo.
+- `/admin/dashboard`: metricas, ventas recientes y alertas de stock.
+- `/admin/producto`, `/admin/inventario`, `/admin/ventas`, `/admin/reportes`, `/admin/configuracion`, `/admin/usuarios`: modulos operativos.
+- `/api/admin/productos/imagen`: subida controlada de imagenes de producto.
+- `/api/admin/usuarios`: creacion de usuarios desde el panel.
 
-To learn more about Next.js, take a look at the following resources:
+## Seguridad aplicada
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- El layout admin valida sesion y rol `admin` en servidor antes de renderizar.
+- Las APIs admin reutilizan la misma autorizacion server-side.
+- La subida de imagenes limita tamano a 5 MB y formatos a JPG, PNG, WEBP o SVG.
+- `robots.txt` bloquea `/admin/` y `/api/`.
