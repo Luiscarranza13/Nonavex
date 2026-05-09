@@ -1,38 +1,31 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { getAdminUser } from "@/lib/auth/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 import { usuarioSchema } from "@/lib/validations/schemas";
 
-async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) return null;
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol, activo")
-    .eq("id", user.id)
-    .single();
-
-  return perfil?.rol === "admin" && perfil.activo ? user : null;
-}
-
 export async function POST(request: Request) {
-  const user = await requireAdmin();
-  if (!user) {
+  const adminUser = await getAdminUser();
+  if (!adminUser) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }
 
-  const body = await request.json();
-  const parsed = usuarioSchema.extend({ password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres.") }).safeParse(body);
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "JSON invalido." }, { status: 400 });
+  }
+
+  const parsed = usuarioSchema
+    .extend({ password: z.string().min(6, "La contrasena debe tener al menos 6 caracteres.") })
+    .safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Datos inválidos." }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Datos invalidos." },
+      { status: 400 },
+    );
   }
 
   const admin = createAdminClient();
@@ -51,13 +44,17 @@ export async function POST(request: Request) {
   }
 
   if (data.user) {
-    await admin.from("perfiles").upsert({
+    const { error: profileError } = await admin.from("perfiles").upsert({
       id: data.user.id,
       nombre: parsed.data.nombre,
       email: parsed.data.email,
       rol: parsed.data.rol,
       activo: parsed.data.activo,
     });
+
+    if (profileError) {
+      return NextResponse.json({ error: profileError.message }, { status: 400 });
+    }
   }
 
   return NextResponse.json({ user: data.user });

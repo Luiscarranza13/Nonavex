@@ -179,7 +179,7 @@ export function ProductForm({ producto }: { producto?: Producto }) {
               <CardTitle>Imagen</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <div className="flex aspect-square items-center justify-center rounded-lg border bg-muted/30 p-4">
+              <div className="flex aspect-square items-center justify-center rounded-lg border bg-muted p-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={preview} alt="Vista previa del producto" className="max-h-full max-w-full object-contain" />
               </div>

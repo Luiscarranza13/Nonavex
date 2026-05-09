@@ -18,16 +18,16 @@ export function AdminNavbar() {
       await createClient().auth.signOut();
       router.push("/login");
     } catch {
-      toast.error("Configura Supabase para cerrar sesión.");
+      toast.error("Configura Supabase para cerrar sesion.");
     }
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/90 px-3 backdrop-blur sm:px-5">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-3 sm:px-5 dark:bg-background">
       <div className="flex min-w-0 items-center gap-3">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Abrir navegación">
+            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Abrir navegacion">
               <Menu />
             </Button>
           </SheetTrigger>
@@ -37,7 +37,7 @@ export function AdminNavbar() {
         </Sheet>
         <div className="min-w-0">
           <p className="truncate font-semibold">Parusia Admin</p>
-          <p className="hidden text-xs text-muted-foreground sm:block">Gestión comercial sin pedidos ni clientes</p>
+          <p className="hidden text-xs text-muted-foreground sm:block">Gestion comercial sin pedidos ni clientes</p>
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">

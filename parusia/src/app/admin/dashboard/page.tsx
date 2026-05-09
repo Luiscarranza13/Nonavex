@@ -147,7 +147,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {lowStock.length ? lowStock.map((item) => (
-              <div key={item.id} className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900 dark:bg-amber-950/30">
+              <div key={item.id} className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900 dark:bg-amber-950">
                 <AlertTriangle className="mt-0.5 size-5" />
                 <div>
                   <p className="font-semibold">{item.productos?.nombre ?? "Producto"} bajo stock</p>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             )) : (
-              <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">No hay alertas de bajo stock.</div>
+              <div className="rounded-lg border bg-muted p-4 text-sm text-muted-foreground">No hay alertas de bajo stock.</div>
             )}
           </CardContent>
         </Card>

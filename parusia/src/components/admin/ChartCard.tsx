@@ -15,7 +15,7 @@ export function ChartCard({ data }: { data: { dia: string; ventas: number; ingre
           {data.map((item) => (
             <div key={item.dia} className="flex flex-1 flex-col items-center gap-2">
               <div
-                className="w-full rounded-t-md bg-primary/80"
+                className="w-full rounded-t-md bg-primary"
                 style={{ height: `${Math.max(18, (item.ingresos / max) * 230)}px` }}
                 title={`S/ ${item.ingresos.toFixed(2)} · ${item.ventas} ventas`}
               />

@@ -15,16 +15,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://parusia.novanex.pe";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  applicationName: "Parusia",
   title: "Parusia | Detergente de Novanex",
   description:
-    "Parusia es un detergente de Novanex diseñado para una limpieza profunda, aroma fresco y gran rendimiento.",
+    "Parusia es un detergente de Novanex disenado para una limpieza profunda, aroma fresco y gran rendimiento.",
+  keywords: ["Parusia", "Novanex", "detergente", "detergente en polvo", "limpieza de ropa"],
   openGraph: {
     title: "Parusia | Detergente de Novanex",
-    description:
-      "Limpieza profunda, aroma fresco y gran rendimiento en una presentación de 850g.",
+    description: "Limpieza profunda, aroma fresco y gran rendimiento en una presentacion de 850g.",
+    url: siteUrl,
     type: "website",
     siteName: "Parusia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Parusia | Detergente de Novanex",
+    description: "Detergente en polvo de alto rendimiento para el hogar.",
   },
   icons: {
     icon: "/favicon.ico",

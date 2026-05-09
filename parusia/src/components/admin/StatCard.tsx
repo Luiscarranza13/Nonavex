@@ -14,7 +14,7 @@ export function StatCard({ title, value, icon: Icon, prefix = "" }: { title: str
           <p className="text-sm text-muted-foreground">{title}</p>
           <p className="mt-1 line-clamp-1 text-2xl font-bold">{displayValue}</p>
         </div>
-        <span className="flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <span className="flex size-11 items-center justify-center rounded-lg bg-cyan-100 text-primary">
           <Icon />
         </span>
       </CardContent>
