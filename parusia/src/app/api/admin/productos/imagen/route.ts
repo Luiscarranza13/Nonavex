@@ -20,13 +20,13 @@ export async function POST(request: Request) {
   try {
     formData = await request.formData();
   } catch {
-    return NextResponse.json({ error: "Formulario invalido." }, { status: 400 });
+    return NextResponse.json({ error: "Formulario inválido." }, { status: 400 });
   }
 
   const file = formData.get("file");
 
   if (!(file instanceof File) || !file.size) {
-    return NextResponse.json({ error: "Selecciona una imagen valida." }, { status: 400 });
+    return NextResponse.json({ error: "Selecciona una imagen válida." }, { status: 400 });
   }
 
   const extension = ALLOWED_IMAGE_TYPES.get(file.type);
@@ -46,6 +46,7 @@ export async function POST(request: Request) {
   const bytes = await file.arrayBuffer();
 
   const { error } = await admin.storage.from("parusia-productos").upload(path, bytes, {
+    cacheControl: "31536000",
     contentType: file.type,
     upsert: false,
   });

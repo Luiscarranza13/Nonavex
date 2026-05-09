@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import gsap from "gsap";
 import { ArrowLeft, ImagePlus, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,8 @@ function slugify(value: string) {
 
 export function ProductForm({ producto }: { producto?: Producto }) {
   const router = useRouter();
+  const previewRef = useRef<HTMLImageElement>(null);
+  const objectUrlRef = useRef<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(producto?.imagen_url ?? fallbackProduct.imagen);
   const [file, setFile] = useState<File | null>(null);
@@ -70,19 +73,39 @@ export function ProductForm({ producto }: { producto?: Producto }) {
     }
   }, [form, isEditing, nombre]);
 
+  useEffect(() => {
+    const image = previewRef.current;
+    if (!image || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    gsap.fromTo(image, { autoAlpha: 0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 0.35, ease: "power2.out" });
+  }, [preview]);
+
   const imageLabel = useMemo(() => {
     if (file) return file.name;
     if (producto?.imagen_url) return "Imagen actual";
     return "Seleccionar imagen";
   }, [file, producto?.imagen_url]);
 
-  function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0] ?? null;
     setFile(nextFile);
     if (nextFile) {
-      setPreview(URL.createObjectURL(nextFile));
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+      const nextPreview = URL.createObjectURL(nextFile);
+      objectUrlRef.current = nextPreview;
+      setPreview(nextPreview);
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
 
   async function onSubmit(values: OutputValues) {
     setSaving(true);
@@ -181,12 +204,12 @@ export function ProductForm({ producto }: { producto?: Producto }) {
             <CardContent className="grid gap-4">
               <div className="flex aspect-square items-center justify-center rounded-lg border bg-muted p-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={preview} alt="Vista previa del producto" className="max-h-full max-w-full object-contain" />
+                <img ref={previewRef} src={preview} alt="Vista previa del producto" className="max-h-full max-w-full object-contain" />
               </div>
               <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed p-4 text-sm font-medium hover:bg-muted">
                 <ImagePlus className="size-4" />
                 {imageLabel}
-                <Input type="file" accept="image/*" className="sr-only" onChange={onFileChange} />
+                <Input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="sr-only" onChange={onFileChange} />
               </label>
               <p className="text-xs text-muted-foreground">Formatos recomendados: PNG, JPG o WEBP. Máximo 5 MB.</p>
             </CardContent>

@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -22,6 +23,7 @@ export function DataTable({
   searchPlaceholder?: string;
 }) {
   const [filter, setFilter] = useState("");
+  const tableRef = useRef<HTMLDivElement>(null);
   const rows = useMemo(() => {
     const normalized = filter.trim().toLowerCase();
     if (!normalized) return data;
@@ -29,6 +31,21 @@ export function DataTable({
       Object.values(row).some((value) => String(value).toLowerCase().includes(normalized)),
     );
   }, [data, filter]);
+
+  useEffect(() => {
+    const table = tableRef.current;
+    if (!table || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        "[data-table-row]",
+        { autoAlpha: 0, y: 8 },
+        { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out", stagger: 0.025 },
+      );
+    }, table);
+
+    return () => ctx.revert();
+  }, [rows]);
 
   return (
     <div className="space-y-3">
@@ -46,7 +63,7 @@ export function DataTable({
           {rows.length} de {data.length} registros
         </p>
       </div>
-      <div className="overflow-x-auto rounded-lg border">
+      <div ref={tableRef} className="overflow-x-auto rounded-lg border">
         <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow>
@@ -57,7 +74,7 @@ export function DataTable({
           </TableHeader>
           <TableBody>
             {rows.length ? rows.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow key={rowIndex} data-table-row>
                 {columns.map((column) => (
                   <TableCell key={column.accessorKey}>
                     {column.cell ? column.cell(row[column.accessorKey], row) : String(row[column.accessorKey] ?? "")}
@@ -67,7 +84,7 @@ export function DataTable({
             )) : (
               <TableRow>
                 <TableCell colSpan={Math.max(columns.length, 1)} className="h-24 text-center text-muted-foreground">
-                  {filter ? "No hay resultados para la busqueda." : "Sin registros."}
+                  {filter ? "No hay resultados para la búsqueda." : "Sin registros."}
                 </TableCell>
               </TableRow>
             )}

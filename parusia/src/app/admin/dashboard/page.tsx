@@ -38,6 +38,8 @@ export default function DashboardPage() {
   const [inventario, setInventario] = useState<InventarioRow[]>([]);
   const [productos, setProductos] = useState<ProductoRow[]>([]);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   async function loadData() {
     const supabase = createClient();
@@ -47,10 +49,13 @@ export default function DashboardPage() {
       supabase.from("productos").select("id, nombre, activo").order("creado_en", { ascending: false }),
     ]);
 
+    const error = ventasResult.error || inventarioResult.error || productosResult.error;
+    setLoadError(error ? "No se pudieron cargar todos los datos del dashboard." : null);
     if (!ventasResult.error) setVentas((ventasResult.data ?? []) as unknown as VentaRow[]);
     if (!inventarioResult.error) setInventario((inventarioResult.data ?? []) as unknown as InventarioRow[]);
     if (!productosResult.error) setProductos((productosResult.data ?? []) as ProductoRow[]);
     setUpdatedAt(new Date());
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -132,12 +137,17 @@ export default function DashboardPage() {
           {updatedAt ? `Actualizado ${updatedAt.toLocaleTimeString("es-PE")}` : "Cargando..."}
         </Badge>
       </div>
+      {loadError ? (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          {loadError}
+        </div>
+      ) : null}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard title="Stock actual" value={stats.stockActual} icon={Boxes} />
-        <StatCard title="Ventas registradas" value={stats.totalVentas} icon={ShoppingBag} />
-        <StatCard title="Ingresos totales" value={stats.ingresos} prefix="S/ " icon={BadgeDollarSign} />
-        <StatCard title="Producto más vendido" value={stats.masVendido} icon={PackageCheck} />
-        <StatCard title="Productos activos" value={stats.activos} icon={PackageCheck} />
+        <StatCard title="Stock actual" value={loading ? 0 : stats.stockActual} icon={Boxes} />
+        <StatCard title="Ventas registradas" value={loading ? 0 : stats.totalVentas} icon={ShoppingBag} />
+        <StatCard title="Ingresos totales" value={loading ? 0 : stats.ingresos} prefix="S/ " icon={BadgeDollarSign} />
+        <StatCard title="Producto más vendido" value={loading ? "Cargando..." : stats.masVendido} icon={PackageCheck} />
+        <StatCard title="Productos activos" value={loading ? 0 : stats.activos} icon={PackageCheck} />
       </div>
       <div className="grid gap-4 xl:grid-cols-[1fr_380px]">
         <ChartCard data={chartData} />
